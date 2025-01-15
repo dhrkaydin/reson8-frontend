@@ -1,0 +1,73 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0;
+  text-align: center;
+  background-color: #fafafa; /* Light pastel background */
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+  border-radius: 10px;
+  background-color: #FFDFBA; /* Pastel Orange */
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em #FFB3BA); /* Pastel Pink glow */
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #D4BAFF); /* Pastel Purple glow */
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+  background-color: #BAE1FF; /* Pastel Blue */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); /* Elevated effect */
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+button {
+  background-color: #FFB3BA; /* Pastel Pink */
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+  background-color: #FFDFBA; /* Pastel Orange */
+  transform: scale(1.05);
+}
