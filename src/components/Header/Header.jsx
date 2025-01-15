@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FaBars } from 'react-icons/fa'; // For the hamburger icon
 import logo from './../../assets/logo.svg'; // Update with your app's logo icon path
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,8 +25,12 @@ const Header = () => {
           {isSessionActive && (
             <button className="text-white hover:text-gray-300">Current Session</button>
           )}
-          <button className="text-white hover:text-gray-300">Routines</button>
-          <button className="text-white hover:text-gray-300">Statistics</button>
+          <Link to="/routines">
+            <button className="text-white hover:text-gray-300">Routines</button>
+          </Link>
+          <Link to="/statistics">
+            <button className="text-white hover:text-gray-300">Statistics</button>
+          </Link>
         </nav>
 
         {/* Hamburger Menu for Mobile */}
@@ -43,8 +48,12 @@ const Header = () => {
           {isSessionActive && (
             <button className="w-full text-white hover:text-gray-300">Current Session</button>
           )}
-          <button className="w-full text-white hover:text-gray-300">Routines</button>
-          <button className="w-full text-white hover:text-gray-300">Statistics</button>
+          <Link to="/routines">
+            <button className="w-full text-white hover:text-gray-300">Routines</button>
+          </Link>
+          <Link to="/statistics">
+            <button className="w-full text-white hover:text-gray-300">Statistics</button>
+          </Link>
         </div>
       )}
     </header>
