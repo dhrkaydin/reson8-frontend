@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import { RoutineForm } from './../../components';
 
 const RoutinePage = () => {
-  // Mock data for routines
+  // Mock data 
   const mockRoutines = [
     { id: 1, title: 'C Major Positions', category: 'Scales' },
     { id: 2, title: 'Steve Vai 10H Workout', category: 'Technique' },
     { id: 3, title: 'Chord Practice', category: 'Chords' },
-    { id: 4, title: 'Improvisation', category: 'Improvisation' },
+    { id: 4, title: 'Jamming in D Major', category: 'Improvisation' },
   ];
 
-  // Mock data for categories
   const mockCategories = ['All', 'Scales', 'Technique', 'Chords', 'Improvisation'];
 
   const [routines, setRoutines] = useState(mockRoutines);
@@ -19,7 +18,8 @@ const RoutinePage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [showForm, setShowForm] = useState(false);
 
-  // Filter routines based on selected category
+  // end of mock data stuff
+
   const handleFilterChange = (category) => {
     setSelectedCategory(category);
     if (category === 'All') {
@@ -42,7 +42,7 @@ const RoutinePage = () => {
       </div>
 
       {/* Filter Dropdown */}
-      <div className="mb-4 place-items-end">
+      <div className="mb-4 items-end">
         <label htmlFor="categoryFilter" className="mr-2 text-black">Filter by Category:</label>
         <select
           id="categoryFilter"
@@ -65,8 +65,8 @@ const RoutinePage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {filteredRoutines.map((routine) => (
           <div key={routine.id} className="p-4 border rounded shadow-sm bg-white">
-            <h2 className="font-semibold text-lg">{routine.title}</h2>
-            <p className="text-sm text-gray-500">{routine.category}</p>
+            <h2 className="font-semibold text-lg text-black">{routine.title}</h2>
+            <p className="text-sm text-black">{routine.category}</p>
           </div>
         ))}
       </div>
