@@ -1,5 +1,47 @@
 import { useState, useEffect } from 'react';
 import './RoutineForm.module.css';
+import apiClient from '../../api/apiClient';
+
+
+const CategoryDropdown = ({ formData, handleChange }) => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await apiClient.get('/api/routines/categories');
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  console.log(apiClient.defaults.baseURL);
+  
+  return (
+    <select
+      id="category"
+      name="category"
+      value={formData.category}
+      onChange={handleChange}
+      className="mt-1 p-2 border rounded w-full"
+      style={{
+        backgroundColor: 'var(--input-bg-color)',
+        color: 'var(--input-text-color)',
+      }}
+    >
+      <option value="">None</option>
+      {categories.map((category, index) => (
+        <option key={index} value={category}>
+          {category}
+        </option>
+      ))}
+    </select>
+  );
+};
 
 const RoutineForm = () => {
   const [formData, setFormData] = useState({
@@ -84,22 +126,7 @@ const RoutineForm = () => {
         <label htmlFor="category" className="block text-lg font-medium">
           Category
         </label>
-        <select
-          id="category"
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          className="mt-1 p-2 border rounded w-full"
-          style={{
-            backgroundColor: 'var(--input-bg-color)',
-            color: 'var(--input-text-color)',
-          }}
-        >
-          <option value="">None</option>
-          <option value="warmup">Warm Up</option>
-          <option value="technique">Technique</option>
-          <option value="performance">Performance</option>
-        </select>
+        <CategoryDropdown formData={formData} handleChange={handleChange} />
       </div>
 
       {/* Set Targets Button */}

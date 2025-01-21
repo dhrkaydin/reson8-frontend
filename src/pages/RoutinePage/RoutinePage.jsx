@@ -1,32 +1,60 @@
-import React, { useState } from 'react';
-import { RoutineForm } from './../../components';
+import { useEffect, useState } from 'react';
+import { RoutineForm } from '../../components';
+import apiClient from '../../api/apiClient';
+
+console.log('Backend URL:', import.meta.env.VITE_RESON8_BACKEND_URL);
+console.log('apiClient loaded:', apiClient);
 
 const RoutinePage = () => {
-  // Mock data 
-  const mockRoutines = [
-    { id: 1, title: 'C Major Positions', category: 'Scales' },
-    { id: 2, title: 'Steve Vai 10H Workout', category: 'Technique' },
-    { id: 3, title: 'Chord Practice', category: 'Chords' },
-    { id: 4, title: 'Jamming in D Major', category: 'Improvisation' },
-  ];
-
-  const mockCategories = ['All', 'Scales', 'Technique', 'Chords', 'Improvisation'];
-
-  const [routines, setRoutines] = useState(mockRoutines);
-  const [filteredRoutines, setFilteredRoutines] = useState(mockRoutines);
-  const [categories] = useState(mockCategories);
+  const [routines, setRoutines] = useState([]);
+  const [filteredRoutines, setFilteredRoutines] = useState([]);
+  const [categories, setCategories] = useState(['All']);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [showForm, setShowForm] = useState(false);
 
-  // end of mock data stuff
+  // Fetch routines from backend
+  useEffect(() => {
+    const fetchRoutines = async () => {
+      try {
+        const response = await apiClient.get('/api/routines');
+        const routines = response.data;
+
+        console.log('Fetched response:', response);
+        console.log('Fetched routines:', response.data);
+
+        // Extract categories from the fetched routines
+        const uniqueCategories = [
+          'All',
+          ...new Set(routines.map((routine) => routine.category)),
+        ];
+
+        setRoutines(routines);
+        setFilteredRoutines(routines);
+        setCategories(uniqueCategories);
+      } catch (error) {
+        console.error('Error fetching routines:', error);
+      }
+    };
+
+    fetchRoutines();
+  }, []);
 
   const handleFilterChange = (category) => {
     setSelectedCategory(category);
     if (category === 'All') {
       setFilteredRoutines(routines);
     } else {
-      setFilteredRoutines(routines.filter(routine => routine.category === category));
+      setFilteredRoutines(
+        routines.filter((routine) => routine.category === category)
+      );
     }
+  };
+
+  // Format the createdDate into a readable string
+  const formatDate = (dateArray) => {
+    const [year, month, day] = dateArray;
+    const date = new Date(year, month - 1, day); // Months are 0-indexed
+    return date.toLocaleDateString(); // Format as per your locale
   };
 
   return (
@@ -67,6 +95,9 @@ const RoutinePage = () => {
           <div key={routine.id} className="p-4 border rounded shadow-sm bg-white">
             <h2 className="font-semibold text-lg text-black">{routine.title}</h2>
             <p className="text-sm text-black">{routine.category}</p>
+            <p className="text-sm text-gray-600">
+              <strong>Created on:</strong> {formatDate(routine.createdDate)}
+            </p>
           </div>
         ))}
       </div>
