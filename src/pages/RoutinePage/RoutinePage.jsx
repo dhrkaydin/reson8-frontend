@@ -16,7 +16,7 @@ const RoutinePage = () => {
   useEffect(() => {
     const fetchRoutines = async () => {
       try {
-        const response = await apiClient.get('/api/routines');
+        const response = await apiClient.get('/routines');
         const routines = response.data;
 
         console.log('Fetched response:', response);

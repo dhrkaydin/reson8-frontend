@@ -9,7 +9,7 @@ const CategoryDropdown = ({ formData, handleChange }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await apiClient.get('/api/routines/categories');
+        const response = await apiClient.get('/routines/categories');
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
