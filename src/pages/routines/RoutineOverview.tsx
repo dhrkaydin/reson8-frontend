@@ -1,26 +1,28 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { RoutineForm } from '../../components';
 import apiClient from '../../api/apiClient';
 
-console.log('Backend URL:', import.meta.env.VITE_RESON8_BACKEND_URL);
-console.log('apiClient loaded:', apiClient);
+interface Routine {
+  id: number;
+  title: string;
+  category: string;
+  createdDate: string | [number, number, number]; // Allow both string and array formats
+}
 
-const RoutinePage = () => {
-  const [routines, setRoutines] = useState([]);
-  const [filteredRoutines, setFilteredRoutines] = useState([]);
-  const [categories, setCategories] = useState(['All']);
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [showForm, setShowForm] = useState(false);
+const RoutineOverview: React.FC = () => {
+  const [routines, setRoutines] = useState<Routine[]>([]);
+  const [filteredRoutines, setFilteredRoutines] = useState<Routine[]>([]);
+  const [categories, setCategories] = useState<string[]>(['All']);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [showForm, setShowForm] = useState<boolean>(false);
 
   // Fetch routines from backend
   useEffect(() => {
     const fetchRoutines = async () => {
       try {
-        const response = await apiClient.get('/routines');
-        const routines = response.data;
-
-        console.log('Fetched response:', response);
-        console.log('Fetched routines:', response.data);
+        const response = await apiClient.get<Routine[]>('/routines');
+        const routines: Routine[] = response.data || [];
 
         // Extract categories from the fetched routines
         const uniqueCategories = [
@@ -39,7 +41,7 @@ const RoutinePage = () => {
     fetchRoutines();
   }, []);
 
-  const handleFilterChange = (category) => {
+  const handleFilterChange = (category: string) => {
     setSelectedCategory(category);
     if (category === 'All') {
       setFilteredRoutines(routines);
@@ -50,11 +52,14 @@ const RoutinePage = () => {
     }
   };
 
-  // Format the createdDate into a readable string
-  const formatDate = (dateArray) => {
-    const [year, month, day] = dateArray;
-    const date = new Date(year, month - 1, day); // Months are 0-indexed
-    return date.toLocaleDateString(); // Format as per your locale
+  const formatDate = (createdDate: string | [number, number, number]): string => {
+    if (typeof createdDate === 'string') {
+      return new Date(createdDate).toLocaleDateString();
+    } else {
+      const [year, month, day] = createdDate;
+      const date = new Date(year, month - 1, day); // Months are 0-indexed
+      return date.toLocaleDateString();
+    }
   };
 
   return (
@@ -92,17 +97,19 @@ const RoutinePage = () => {
       {/* Grid of Routines */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {filteredRoutines.map((routine) => (
-          <div key={routine.id} className="p-4 border rounded shadow-sm bg-white">
-            <h2 className="font-semibold text-lg text-black">{routine.title}</h2>
-            <p className="text-sm text-black">{routine.category}</p>
-            <p className="text-sm text-gray-600">
-              <strong>Created on:</strong> {formatDate(routine.createdDate)}
-            </p>
-          </div>
+          <Link to={`/routines/${routine.id}`} key={routine.id}>
+            <div className="p-4 border rounded shadow-sm bg-white">
+              <h2 className="font-semibold text-lg text-black">{routine.title}</h2>
+              <p className="text-sm text-black">{routine.category}</p>
+              <p className="text-sm text-gray-600">
+                <strong>Created on:</strong> {formatDate(routine.createdDate)}
+              </p>
+            </div>
+          </Link>
         ))}
       </div>
     </div>
   );
 };
 
-export default RoutinePage;
+export default RoutineOverview;

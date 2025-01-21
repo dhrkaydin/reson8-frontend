@@ -2,14 +2,24 @@ import { useState, useEffect } from 'react';
 import './RoutineForm.module.css';
 import apiClient from '../../api/apiClient';
 
+interface RoutineFormProps {
+  onClose: () => void;
+}
 
-const CategoryDropdown = ({ formData, handleChange }) => {
-  const [categories, setCategories] = useState([]);
+interface CategoryDropdownProps {
+  formData: {
+    category: string;
+  };
+  handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+}
+
+const CategoryDropdown: React.FC<CategoryDropdownProps> = ({ formData, handleChange }) => {
+  const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await apiClient.get('/routines/categories');
+        const response = await apiClient.get<string[]>('/routines/categories');
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -20,7 +30,7 @@ const CategoryDropdown = ({ formData, handleChange }) => {
   }, []);
 
   console.log(apiClient.defaults.baseURL);
-  
+
   return (
     <select
       id="category"
@@ -43,7 +53,7 @@ const CategoryDropdown = ({ formData, handleChange }) => {
   );
 };
 
-const RoutineForm = () => {
+const RoutineForm: React.FC<RoutineFormProps> = ({ onClose }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -61,7 +71,7 @@ const RoutineForm = () => {
     setTheme(prefersDark ? 'dark' : 'light');
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -69,7 +79,7 @@ const RoutineForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log(formData);
   };

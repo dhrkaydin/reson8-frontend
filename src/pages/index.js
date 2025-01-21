@@ -1,1 +1,3 @@
-export { default as RoutinePage } from './RoutinePage/RoutinePage.jsx';
+export { default as RoutinePage } from './routines/RoutinePage';
+export { default as RoutineOverview } from './routines/RoutineOverview';
+ 
