@@ -7,7 +7,7 @@ interface Routine {
   id: number;
   title: string;
   category: string;
-  createdDate: string | [number, number, number]; // Allow both string and array formats
+  createdDate: string | [number, number, number];
 }
 
 const RoutineOverview: React.FC = () => {
@@ -17,28 +17,27 @@ const RoutineOverview: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [showForm, setShowForm] = useState<boolean>(false);
 
-  // Fetch routines from backend
+  // Fetch routines and categories from backend
   useEffect(() => {
-    const fetchRoutines = async () => {
+    const fetchData = async () => {
       try {
-        const response = await apiClient.get<Routine[]>('/routines');
-        const routines: Routine[] = response.data || [];
+        const [routinesResponse, categoriesResponse] = await Promise.all([
+          apiClient.get<Routine[]>('/routines'),
+          apiClient.get<string[]>('/routines/categories'),
+        ]);
 
-        // Extract categories from the fetched routines
-        const uniqueCategories = [
-          'All',
-          ...new Set(routines.map((routine) => routine.category)),
-        ];
+        const routines: Routine[] = routinesResponse.data || [];
+        const categories: string[] = ['All', ...categoriesResponse.data];
 
         setRoutines(routines);
         setFilteredRoutines(routines);
-        setCategories(uniqueCategories);
+        setCategories(categories);
       } catch (error) {
-        console.error('Error fetching routines:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
-    fetchRoutines();
+    fetchData();
   }, []);
 
   const handleFilterChange = (category: string) => {
@@ -92,7 +91,7 @@ const RoutineOverview: React.FC = () => {
       </div>
 
       {/* Routine Form */}
-      {showForm && <RoutineForm onClose={() => setShowForm(false)} />}
+      {showForm && <RoutineForm onClose={() => setShowForm(false)} categories={categories}/>}
 
       {/* Grid of Routines */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

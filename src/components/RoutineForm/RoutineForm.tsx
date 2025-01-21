@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import './RoutineForm.module.css';
-import apiClient from '../../api/apiClient';
 
 interface RoutineFormProps {
   onClose: () => void;
+  categories: string[];
 }
 
 interface CategoryDropdownProps {
@@ -11,49 +11,31 @@ interface CategoryDropdownProps {
     category: string;
   };
   handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  categories: string[];
 }
 
-const CategoryDropdown: React.FC<CategoryDropdownProps> = ({ formData, handleChange }) => {
-  const [categories, setCategories] = useState<string[]>([]);
+const CategoryDropdown: React.FC<CategoryDropdownProps> = ({ formData, handleChange, categories }) => (
+  <select
+  id="category"
+  name="category"
+  value={formData.category}
+  onChange={handleChange}
+  className="mt-1 p-2 border rounded w-full"
+  style={{
+    backgroundColor: 'var(--input-bg-color)',
+    color: 'var(--input-text-color)',
+  }}
+>
+  <option value="">Select a category</option>
+  {categories.map((category, index) => (
+    <option key={index} value={category}>
+      {category}
+    </option>
+  ))}
+</select>
+);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await apiClient.get<string[]>('/routines/categories');
-        setCategories(response.data);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  console.log(apiClient.defaults.baseURL);
-
-  return (
-    <select
-      id="category"
-      name="category"
-      value={formData.category}
-      onChange={handleChange}
-      className="mt-1 p-2 border rounded w-full"
-      style={{
-        backgroundColor: 'var(--input-bg-color)',
-        color: 'var(--input-text-color)',
-      }}
-    >
-      <option value="">None</option>
-      {categories.map((category, index) => (
-        <option key={index} value={category}>
-          {category}
-        </option>
-      ))}
-    </select>
-  );
-};
-
-const RoutineForm: React.FC<RoutineFormProps> = ({ onClose }) => {
+const RoutineForm: React.FC<RoutineFormProps> = ({ onClose, categories }) => {  // Added categories as a prop here
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -63,8 +45,8 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ onClose }) => {
     targetFrequencyUnit: '',
   });
 
-  const [showTargets, setShowTargets] = useState(false); // Toggle state for target fields
-  const [theme, setTheme] = useState('light'); // Dynamic theme support
+  const [showTargets, setShowTargets] = useState(false);
+  const [theme, setTheme] = useState('light');
 
   useEffect(() => {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -136,7 +118,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ onClose }) => {
         <label htmlFor="category" className="block text-lg font-medium">
           Category
         </label>
-        <CategoryDropdown formData={formData} handleChange={handleChange} />
+        <CategoryDropdown formData={formData} handleChange={handleChange} categories={categories} />
       </div>
 
       {/* Set Targets Button */}
