@@ -1,9 +1,19 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './RoutineForm.module.css';
 
 interface RoutineFormProps {
   onClose: () => void;
   categories: string[];
+  initialData: {
+    title: string;
+    description: string;
+    category: string;
+    targetBPM: string;
+    targetFrequencyInterval: string;
+    targetFrequencyUnit: string;
+  };
+  onSubmit: (updatedRoutine: any) => void;
 }
 
 interface CategoryDropdownProps {
@@ -16,36 +26,30 @@ interface CategoryDropdownProps {
 
 const CategoryDropdown: React.FC<CategoryDropdownProps> = ({ formData, handleChange, categories }) => (
   <select
-  id="category"
-  name="category"
-  value={formData.category}
-  onChange={handleChange}
-  className="mt-1 p-2 border rounded w-full"
-  style={{
-    backgroundColor: 'var(--input-bg-color)',
-    color: 'var(--input-text-color)',
-  }}
->
-  <option value="">Select a category</option>
-  {categories.map((category, index) => (
-    <option key={index} value={category}>
-      {category}
-    </option>
-  ))}
-</select>
+    id="category"
+    name="category"
+    value={formData.category}
+    onChange={handleChange}
+    className="mt-1 p-2 border rounded w-full"
+    style={{
+      backgroundColor: 'var(--input-bg-color)',
+      color: 'var(--input-text-color)',
+    }}
+  >
+    <option value="">Select a category</option>
+    {categories.map((category, index) => (
+      <option key={index} value={category}>
+        {category}
+      </option>
+    ))}
+  </select>
 );
 
-const RoutineForm: React.FC<RoutineFormProps> = ({ onClose, categories }) => {  // Added categories as a prop here
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    category: '',
-    targetBPM: '',
-    targetFrequencyInterval: '',
-    targetFrequencyUnit: '',
-  });
+const RoutineForm: React.FC<RoutineFormProps> = ({ onClose, categories, initialData, onSubmit }) => {
+  const [formData, setFormData] = useState(initialData); // Initialize with initialData
 
   const [showTargets, setShowTargets] = useState(false);
+  const navigate = useNavigate(); // For navigation, but we won't use it for cancel
   const [theme, setTheme] = useState('light');
 
   useEffect(() => {
@@ -63,7 +67,16 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ onClose, categories }) => {  
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
+
+    const currentDate = new Date().toISOString(); // Get the current date in ISO format
+    const updatedData = { ...formData, createdDate: currentDate };
+
+    onSubmit(updatedData);
+  };
+
+  const handleCancel = () => {
+    setFormData(initialData); // Reset the form to the initial data
+    onClose(); // Close the form without navigation
   };
 
   return (
@@ -199,6 +212,15 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ onClose, categories }) => {  
         className="bg-pink-500 md:w-2/3 text-white p-2 rounded w-full hover:bg-pink-600"
       >
         Save Routine
+      </button>
+
+      {/* Cancel Button */}
+      <button
+        type="button"
+        onClick={handleCancel}
+        className="bg-gray-500 md:w-2/3 text-white p-2 rounded w-full hover:bg-gray-600 mt-4"
+      >
+        Cancel
       </button>
     </form>
   );

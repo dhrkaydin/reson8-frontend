@@ -1,18 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RoutineForm } from '../../components';
+import { PracticeRoutineDTO } from '../../generated/models/PracticeRoutineDTO';
 import apiClient from '../../api/apiClient';
 
-interface Routine {
-  id: number;
-  title: string;
-  category: string;
-  createdDate: string | [number, number, number];
-}
-
 const RoutineOverview: React.FC = () => {
-  const [routines, setRoutines] = useState<Routine[]>([]);
-  const [filteredRoutines, setFilteredRoutines] = useState<Routine[]>([]);
+  const [routines, setRoutines] = useState<PracticeRoutineDTO[]>([]);
+  const [filteredRoutines, setFilteredRoutines] = useState<PracticeRoutineDTO[]>([]);
   const [categories, setCategories] = useState<string[]>(['All']);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [showForm, setShowForm] = useState<boolean>(false);
@@ -22,11 +16,11 @@ const RoutineOverview: React.FC = () => {
     const fetchData = async () => {
       try {
         const [routinesResponse, categoriesResponse] = await Promise.all([
-          apiClient.get<Routine[]>('/routines'),
+          apiClient.get<PracticeRoutineDTO[]>('/routines'),
           apiClient.get<string[]>('/routines/categories'),
         ]);
 
-        const routines: Routine[] = routinesResponse.data || [];
+        const routines: PracticeRoutineDTO[] = routinesResponse.data || [];
         const categories: string[] = ['All', ...categoriesResponse.data];
 
         setRoutines(routines);
@@ -46,19 +40,29 @@ const RoutineOverview: React.FC = () => {
       setFilteredRoutines(routines);
     } else {
       setFilteredRoutines(
-        routines.filter((routine) => routine.category === category)
+        routines.filter((routine) => routine.category.toLowerCase() === category.toLowerCase())
       );
     }
   };
 
-  const formatDate = (createdDate: string | [number, number, number]): string => {
-    if (typeof createdDate === 'string') {
-      return new Date(createdDate).toLocaleDateString();
-    } else {
-      const [year, month, day] = createdDate;
-      const date = new Date(year, month - 1, day); // Months are 0-indexed
-      return date.toLocaleDateString();
-    }
+  // Format the date string directly using toLocaleDateString
+  const formatDate = (createdDate: string): string => {
+    const date = new Date(createdDate);
+    return date.toLocaleDateString();
+  };
+
+  // Handle the form submission
+  const handleSubmit = (updatedRoutine: any) => {
+    // Send the updated routine to the backend (this is an example of a POST request)
+    apiClient
+      .post('/routines', updatedRoutine)
+      .then((response) => {
+        setRoutines((prevRoutines) => [...prevRoutines, response.data]);
+        setShowForm(false); // Close the form after submitting
+      })
+      .catch((error) => {
+        console.error('Error creating routine:', error);
+      });
   };
 
   return (
@@ -91,17 +95,31 @@ const RoutineOverview: React.FC = () => {
       </div>
 
       {/* Routine Form */}
-      {showForm && <RoutineForm onClose={() => setShowForm(false)} categories={categories}/>}
+      {showForm && (
+        <RoutineForm
+          onClose={() => setShowForm(false)}
+          categories={categories}
+          initialData={{
+            title: '',
+            description: '',
+            category: '',
+            targetBPM: '',
+            targetFrequencyInterval: '',
+            targetFrequencyUnit: '',
+          }}
+          onSubmit={handleSubmit}
+        />
+      )}
 
       {/* Grid of Routines */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {filteredRoutines.map((routine) => (
-          <Link to={`/routines/${routine.id}`} key={routine.id}>
+          <Link to={`/routines/${routine.id.toString()}`} key={routine.id}>
             <div className="p-4 border rounded shadow-sm bg-white">
               <h2 className="font-semibold text-lg text-black">{routine.title}</h2>
               <p className="text-sm text-black">{routine.category}</p>
               <p className="text-sm text-gray-600">
-                <strong>Created on:</strong> {formatDate(routine.createdDate)}
+                <strong>Created on:</strong> {routine.createdDate != null ? formatDate(routine.createdDate) : 'N/A'}
               </p>
             </div>
           </Link>

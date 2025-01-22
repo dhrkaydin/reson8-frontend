@@ -1,8 +1,6 @@
-# React + Vite
+## Starting the application
+Installing dependencies, generating the DTO's based on backend API documentation (only need to run when backend DTOs changed, and on first install), and starting the application:
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+npm install  
+npm run generate:dtos
+npm run dev
