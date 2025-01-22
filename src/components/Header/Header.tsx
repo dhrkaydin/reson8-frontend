@@ -3,12 +3,12 @@ import { FaBars } from 'react-icons/fa'; // For the hamburger icon
 import logo from './../../assets/logo.svg'; // Update with your app's logo icon path
 import { Link } from 'react-router-dom';
 
-const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSessionActive, setIsSessionActive] = useState(true); // Simulating active session
+const Header: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isSessionActive, setIsSessionActive] = useState<boolean>(true); // Simulating active session
 
   // Toggle the hamburger menu
-  const toggleMenu = () => {
+  const toggleMenu = (): void => {
     setIsMenuOpen(!isMenuOpen);
   };
 
