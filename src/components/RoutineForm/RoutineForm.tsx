@@ -1,63 +1,37 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import useApi from '../../hooks/useApi';
+import { Dropdown } from './..';
 import './RoutineForm.module.css';
+import { PracticeRoutineDTO } from '../../generated/models/PracticeRoutineDTO';
 
 interface RoutineFormProps {
   onClose: () => void;
-  categories: string[];
-  initialData: {
-    title: string;
-    description: string;
-    category: string;
-    targetBPM: string;
-    targetFrequencyInterval: string;
-    targetFrequencyUnit: string;
-  };
+  initialData: PracticeRoutineDTO;
   onSubmit: (updatedRoutine: any) => void;
 }
 
-interface CategoryDropdownProps {
-  formData: {
-    category: string;
-  };
-  handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  categories: string[];
-}
-
-const CategoryDropdown: React.FC<CategoryDropdownProps> = ({ formData, handleChange, categories }) => (
-  <select
-    id="category"
-    name="category"
-    value={formData.category}
-    onChange={handleChange}
-    className="mt-1 p-2 border rounded w-full"
-    style={{
-      backgroundColor: 'var(--input-bg-color)',
-      color: 'var(--input-text-color)',
-    }}
-  >
-    <option value="">Select a category</option>
-    {categories.map((category, index) => (
-      <option key={index} value={category}>
-        {category}
-      </option>
-    ))}
-  </select>
-);
-
-const RoutineForm: React.FC<RoutineFormProps> = ({ onClose, categories, initialData, onSubmit }) => {
-  const [formData, setFormData] = useState(initialData); // Initialize with initialData
-
+const RoutineForm: React.FC<RoutineFormProps> = ({ onClose, initialData, onSubmit }) => {
+  const [formData, setFormData] = useState(initialData);
   const [showTargets, setShowTargets] = useState(false);
-  const navigate = useNavigate(); // For navigation, but we won't use it for cancel
-  const [theme, setTheme] = useState('light');
+  const { data, execute } = useApi<string[]>();
+  const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setTheme(prefersDark ? 'dark' : 'light');
+    const fetchCategories = async () => {
+      await execute('GET', '/routines/categories');
+    };
+  
+    fetchCategories();
   }, []);
+  
+  useEffect(() => {
+    if (data) {
+      setCategories(data);
+    }
+  }, [data]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  // Dynamically updates form when inputting a value into an input/select element.
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -65,28 +39,34 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ onClose, categories, initialD
     }));
   };
 
+  // Updates the category value in form data via the dropdown.
+  const handleCategoryChange = (selectedCategory: string) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      category: selectedCategory,
+    }));
+  };
+
+  // Adds the date to the form data and calls onSubmit (which should be provided by the parent component).
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const currentDate = new Date().toISOString(); // Get the current date in ISO format
+    const currentDate = new Date().toISOString(); 
     const updatedData = { ...formData, createdDate: currentDate };
 
     onSubmit(updatedData);
+    onClose();
   };
 
   const handleCancel = () => {
-    setFormData(initialData); // Reset the form to the initial data
-    onClose(); // Close the form without navigation
+    setFormData(initialData); 
+    onClose();
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 p-4 rounded"
-      style={{
-        backgroundColor: 'var(--background-color)',
-        color: 'var(--text-color)',
-      }}
+      className="space-y-4 p-4 mb-4 rounded bg-pastelPink text-black border"
     >
       {/* Title */}
       <div className="w-full md:w-2/3 mx-auto">
@@ -101,10 +81,6 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ onClose, categories, initialD
           onChange={handleChange}
           required
           className="mt-1 p-2 border rounded w-full"
-          style={{
-            backgroundColor: 'var(--input-bg-color)',
-            color: 'var(--input-text-color)',
-          }}
         />
       </div>
 
@@ -119,10 +95,6 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ onClose, categories, initialD
           value={formData.description}
           onChange={handleChange}
           className="mt-1 p-2 border rounded w-full"
-          style={{
-            backgroundColor: 'var(--input-bg-color)',
-            color: 'var(--input-text-color)',
-          }}
         />
       </div>
 
@@ -131,7 +103,10 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ onClose, categories, initialD
         <label htmlFor="category" className="block text-lg font-medium">
           Category
         </label>
-        <CategoryDropdown formData={formData} handleChange={handleChange} categories={categories} />
+        <Dropdown
+          values={categories}
+          onChange={handleCategoryChange} // Handle category selection
+        />
       </div>
 
       {/* Set Targets Button */}
@@ -159,10 +134,6 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ onClose, categories, initialD
               value={formData.targetBPM}
               onChange={handleChange}
               className="p-2 border rounded w-full"
-              style={{
-                backgroundColor: 'var(--input-bg-color)',
-                color: 'var(--input-text-color)',
-              }}
             />
           </div>
           <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -176,10 +147,6 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ onClose, categories, initialD
               value={formData.targetFrequencyInterval}
               onChange={handleChange}
               className="p-2 border rounded w-full"
-              style={{
-                backgroundColor: 'var(--input-bg-color)',
-                color: 'var(--input-text-color)',
-              }}
             />
           </div>
           <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -192,10 +159,6 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ onClose, categories, initialD
               value={formData.targetFrequencyUnit}
               onChange={handleChange}
               className="p-2 border rounded w-full"
-              style={{
-                backgroundColor: 'var(--input-bg-color)',
-                color: 'var(--input-text-color)',
-              }}
             >
               <option value="">Select unit</option>
               <option value="day">Day(s)</option>

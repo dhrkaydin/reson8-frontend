@@ -12,7 +12,7 @@ const SessionForm = () => {
   
   // Fetch available routines from the backend
   useEffect(() => {
-    axios.get('/api/routines')
+    axios.get('/routines')
       .then(response => setRoutines(response.data))
       .catch(error => console.error("Error fetching routines", error));
   }, []);

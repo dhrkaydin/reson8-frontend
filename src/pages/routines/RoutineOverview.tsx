@@ -2,47 +2,51 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RoutineForm } from '../../components';
 import { PracticeRoutineDTO } from '../../generated/models/PracticeRoutineDTO';
-import apiClient from '../../api/apiClient';
+import useApi from '../../hooks/useApi';
 
 const RoutineOverview: React.FC = () => {
-  const [routines, setRoutines] = useState<PracticeRoutineDTO[]>([]);
   const [filteredRoutines, setFilteredRoutines] = useState<PracticeRoutineDTO[]>([]);
-  const [categories, setCategories] = useState<string[]>(['All']);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [showForm, setShowForm] = useState<boolean>(false);
 
-  // Fetch routines and categories from backend
+  const { data, loading, error, execute } = useApi<PracticeRoutineDTO[]>();
+  const [routines, setRoutines] = useState<PracticeRoutineDTO[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+
   useEffect(() => {
+    // Fetch data using the execute method from useApi
     const fetchData = async () => {
       try {
-        const [routinesResponse, categoriesResponse] = await Promise.all([
-          apiClient.get<PracticeRoutineDTO[]>('/routines'),
-          apiClient.get<string[]>('/routines/categories'),
-        ]);
-
-        const routines: PracticeRoutineDTO[] = routinesResponse.data || [];
-        const categories: string[] = ['All', ...categoriesResponse.data];
-
-        setRoutines(routines);
-        setFilteredRoutines(routines);
-        setCategories(categories);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+        await execute('GET', '/routines');
+      } catch (err) {
+        console.error("Error during fetch", err);
       }
     };
 
     fetchData();
   }, []);
 
-  const handleFilterChange = (category: string) => {
-    setSelectedCategory(category);
-    if (category === 'All') {
+  useEffect(() => {
+    if (data) {
+      setRoutines(data); // Set routines with fetched data
+      const categoryNames = data.map((routine) => routine.category);
+      setCategories(['All', ...categoryNames]);
+    }
+  }, [data]); // Update when the data is available
+
+  // Synchronize filtered routines with routines and selectedCategory
+  useEffect(() => {
+    if (selectedCategory === 'All') {
       setFilteredRoutines(routines);
     } else {
       setFilteredRoutines(
-        routines.filter((routine) => routine.category.toLowerCase() === category.toLowerCase())
+        routines.filter((routine) => routine.category.toLowerCase() === selectedCategory.toLowerCase())
       );
     }
+  }, [routines, selectedCategory]);
+
+  const handleFilterChange = (category: string) => {
+    setSelectedCategory(category);
   };
 
   // Format the date string directly using toLocaleDateString
@@ -98,7 +102,6 @@ const RoutineOverview: React.FC = () => {
       {showForm && (
         <RoutineForm
           onClose={() => setShowForm(false)}
-          categories={categories}
           initialData={{
             title: '',
             description: '',
