@@ -13,9 +13,9 @@ const Header: React.FC = () => {
       </div>
 
       <Link to="/">
-        <div className="flex items-center justify-center font-micro5 text-9xl text-resonPurple">
+        <div className="flex sm:items-center sm:justify-center font-micro5 text-6xl sm:text-9xl text-resonPurple">
           <span className="hidden sm:flex">RESON8</span>
-          <span className="sm:hidden">R8</span>
+          <span className="sm:hidden mx-5">R8</span>
         </div>
       </Link>
 

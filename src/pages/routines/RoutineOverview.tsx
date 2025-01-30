@@ -6,7 +6,7 @@ import useApi from '../../hooks/useApi';
 
 const RoutineOverview: React.FC = () => {
   const [filteredRoutines, setFilteredRoutines] = useState<PracticeRoutineDTO[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [showForm, setShowForm] = useState<boolean>(false);
 
   const { data, loading, error, execute } = useApi<PracticeRoutineDTO[]>();
@@ -28,15 +28,15 @@ const RoutineOverview: React.FC = () => {
 
   useEffect(() => {
     if (data) {
-      setRoutines(data); // Set routines with fetched data
-      const categoryNames = data.map((routine) => routine.category);
-      setCategories(['All', ...categoryNames]);
+      setRoutines(data);
+      const categoryNames = [...new Set(data.map((routine) => routine.category))]; // Ensure unique categories
+      setCategories(['all', ...categoryNames]);
     }
-  }, [data]); // Update when the data is available
+  }, [data]);
 
   // Synchronize filtered routines with routines and selectedCategory
   useEffect(() => {
-    if (selectedCategory === 'All') {
+    if (selectedCategory === 'all') {
       setFilteredRoutines(routines);
     } else {
       setFilteredRoutines(
@@ -49,30 +49,21 @@ const RoutineOverview: React.FC = () => {
     setSelectedCategory(category);
   };
 
-  // Format the date string directly using toLocaleDateString
-  const formatDate = (createdDate: string): string => {
-    const date = new Date(createdDate);
-    return date.toLocaleDateString();
-  };
-
   // Handle the form submission
-  const handleSubmit = (updatedRoutine: any) => {
-    // Send the updated routine to the backend (this is an example of a POST request)
-    apiClient
-      .post('/routines', updatedRoutine)
-      .then((response) => {
-        setRoutines((prevRoutines) => [...prevRoutines, response.data]);
-        setShowForm(false); // Close the form after submitting
-      })
-      .catch((error) => {
-        console.error('Error creating routine:', error);
-      });
+  const handleSubmit = async (updatedRoutine: PracticeRoutineDTO) => {
+    try {
+      await execute('POST', '/routines', updatedRoutine);
+      setRoutines((prevRoutines) => [...prevRoutines, updatedRoutine]);
+      setShowForm(false);
+    } catch (error) {
+      console.error('Error creating routine:', error);
+    }
   };
 
   return (
-    <div className="min-h-screen sm:overflow-y-auto bg-resonYellow sm:px-4 pb-4">
+    <div className="min-h-screen bg-resonYellow sm:px-4 pb-4">
       {/* Filter + Button Container */}
-      <div className="flex flex-col sm:flex-row sm:justify-center items-center pt-4 pb-10 gap-4 sm:gap-10 sm:px-36">
+      <div className="sticky bg-resonYellow top-0 flex flex-col sm:flex-row sm:justify-center items-center sm:pt-4 pb-4 gap-4 sm:gap-10 sm:px-36">
         {/* Filter Dropdown */}
         <div className="flex flex-col sm:flex-row justify-center items-center font-pixelify text-2xl">
           <label htmlFor="categoryFilter" className="mr-2 text-black">filter:</label>
@@ -124,10 +115,10 @@ const RoutineOverview: React.FC = () => {
       )}
 
       {/* Grid of Routines */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 px-40 place-items-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-4 sm:gap-y-24 mx-auto place-items-center overflow-y-auto">
         {filteredRoutines.map((routine, index) => (
           <Link to={`/routines/${routine.id.toString()}`} key={routine.id}>
-            <div className={`flex flex-col text-center justify-center items-center aspect-square w-72 shadow-sm text-black ${
+            <div className={`flex flex-col flex- text-center justify-center items-center aspect-square w-60 shadow-sm text-black ${
                 index % 2 === 0 ? "bg-resonGreen" : "bg-resonPurple"
               }`}>
               <h2 className="flex font-semibold text-4xl text-black font-handjet">{routine.title}</h2>
