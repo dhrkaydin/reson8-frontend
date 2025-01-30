@@ -70,32 +70,41 @@ const RoutineOverview: React.FC = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Routines</h1>
+    <div className="min-h-screen sm:overflow-y-auto bg-resonYellow sm:px-4 pb-4">
+      {/* Filter + Button Container */}
+      <div className="flex flex-col sm:flex-row sm:justify-center items-center pt-4 pb-10 gap-4 sm:gap-10 sm:px-36">
+        {/* Filter Dropdown */}
+        <div className="flex flex-col sm:flex-row justify-center items-center font-pixelify text-2xl">
+          <label htmlFor="categoryFilter" className="mr-2 text-black">filter:</label>
+          
+          <div className="relative">
+            <select
+              id="categoryFilter"
+              value={selectedCategory}
+              onChange={(e) => handleFilterChange(e.target.value)}
+              className="bg-resonGreen h-10 w-52 text-black text-2xl text-center font-pixelify px-4 py-0 border appearance-none cursor-pointer focus:outline-none"
+            >
+              {categories.map((category, index) => (
+                <option key={index} value={category} className="text-black bg-resonGreen">
+                  {category}
+                </option>
+              ))}
+            </select>
+
+            {/* Custom dropdown arrow */}
+            <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+              ⌄
+            </div>
+          </div>
+        </div>
+
+        {/* Create Routine Button */}
         <button
           onClick={() => setShowForm(!showForm)}
-          className="bg-pastelPink text-white px-4 py-2 rounded hover:bg-pink-500"
+          className="bg-resonPurple flex justify-center items-center font-pixelify h-10 w-52 text-2xl hover:bg-resonPurple-800"
         >
-          {showForm ? 'Close Form' : 'Create New Routine'}
+          {showForm ? 'close' : 'add routine'}
         </button>
-      </div>
-
-      {/* Filter Dropdown */}
-      <div className="mb-4 items-end">
-        <label htmlFor="categoryFilter" className="mr-2 text-black">Filter by Category:</label>
-        <select
-          id="categoryFilter"
-          value={selectedCategory}
-          onChange={(e) => handleFilterChange(e.target.value)}
-          className="border rounded px-2 py-1"
-        >
-          {categories.map((category, index) => (
-            <option key={index} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
       </div>
 
       {/* Routine Form */}
@@ -115,15 +124,14 @@ const RoutineOverview: React.FC = () => {
       )}
 
       {/* Grid of Routines */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {filteredRoutines.map((routine) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 px-40 place-items-center">
+        {filteredRoutines.map((routine, index) => (
           <Link to={`/routines/${routine.id.toString()}`} key={routine.id}>
-            <div className="p-4 border rounded shadow-sm bg-white">
-              <h2 className="font-semibold text-lg text-black">{routine.title}</h2>
-              <p className="text-sm text-black">{routine.category}</p>
-              <p className="text-sm text-gray-600">
-                <strong>Created on:</strong> {routine.createdDate != null ? formatDate(routine.createdDate) : 'N/A'}
-              </p>
+            <div className={`flex flex-col text-center justify-center items-center aspect-square w-72 shadow-sm text-black ${
+                index % 2 === 0 ? "bg-resonGreen" : "bg-resonPurple"
+              }`}>
+              <h2 className="flex font-semibold text-4xl text-black font-handjet">{routine.title}</h2>
+              <p className="flex text-sm text-gray-600">{routine.category}</p>
             </div>
           </Link>
         ))}
