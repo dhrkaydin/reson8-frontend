@@ -21,6 +21,7 @@ export default {
         handjet: ['Handjet', 'sans-serif'],
         micro5: ['Micro5', 'sans-serif'],
         pixelify: ['PixelifySans', 'sans-serif'],
+        silkscreen: ['Silkscreen', 'sans-serif'],
       }
     },
   },

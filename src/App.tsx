@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Layout } from './components';
-import { RoutineOverview, RoutinePage, RoutineEditPage, HomePage, SessionSelection } from './pages';
+import { RoutineOverview, RoutinePage, RoutineEditPage, HomePage, SessionSelection, SessionPage } from './pages';
 import './styles/App.css';
 
 function App() {
@@ -13,6 +13,7 @@ function App() {
             <Route path="/routines/edit/:id" element={<RoutineEditPage />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/sessions" element={<SessionSelection />} />
+            <Route path="/sessions/active" element={<SessionPage />} />
           </Route>
         </Routes>
     </Router>

@@ -32,16 +32,31 @@ const RoutinePage: React.FC = () => {
   if (error) return <div className="text-center mt-10 text-red-500">{error}</div>;
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
-      <h1 className="text-2xl font-bold text-gray-800">{routine?.title}</h1>
-      <p className="text-gray-600 mt-2">{routine?.description}</p>
-      <p className="text-sm text-gray-500 mt-4">Category: {routine?.category}</p>
-      <button
-        className="mt-6 text-gray-500 hover:text-pink-700 text-sm no-underline"
-        onClick={() => navigate(`/routines/edit/${id}`)}
-      >
-        Edit
-      </button>
+    <div className="w-full min-h-screen h-full bg-resonYellow flex-col items-center justify-center gap-10 p-8">
+      {/* Title and description container */}
+      <div className= "flex flex-col flex-grow-[2]w-full h-2/3 items-center gap-4">
+        <span className="text-3xl sm:text-6xl font-silkscreen text-resonPurple text-center">{routine?.title}</span>
+        <p className="text-black font-handjet text-center">{routine?.description}</p>
+      </div>
+
+      {/* Category and edit button container */}
+      <div className='flex flex-col w-full sm:flex-row items-center justify-evenly gap-4'>
+        <p className="text-sm text-center text-black">category: {routine?.category}</p>
+        <div className='flex flex-row gap-4'>
+          <button
+            className=" bg-resonPurple text-2xl w-20 sm:w-32 text-black font-pixelify hover:text-pink-700 no-underline"
+            onClick={() => navigate(`/routines/edit/${id}`)}
+          >
+            edit
+          </button>
+          <button
+            className=" bg-resonPurple text-2xl w-20 sm:w-32 text-black font-pixelify hover:text-pink-700 no-underline"
+            onClick={() => navigate(`/routines/edit/${id}`)}
+          >
+            back
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
