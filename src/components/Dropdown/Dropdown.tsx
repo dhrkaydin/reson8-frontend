@@ -20,7 +20,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({ values, onChange })
       name="category"
       value={selectedOption} // Bind to internal state
       onChange={handleChange}
-      className="mt-1 p-2 border rounded w-full bg-white"
+      className="text-xl p-2 border w-full font-handjet bg-resonYellow"
     >
       <option value="">Select a category</option>
       {values.map((value, index) => (

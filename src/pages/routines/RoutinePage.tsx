@@ -34,9 +34,11 @@ const RoutinePage: React.FC = () => {
   return (
     <div className="w-full min-h-screen h-full bg-resonYellow flex-col items-center justify-center gap-10 p-8">
       {/* Title and description container */}
-      <div className= "flex flex-col flex-grow-[2]w-full h-2/3 items-center gap-4">
+      <div className= "flex flex-col flex-grow-[2] w-full h-2/3 items-center gap-4">
         <span className="text-3xl sm:text-6xl font-silkscreen text-resonPurple text-center">{routine?.title}</span>
-        <p className="text-black font-handjet text-center">{routine?.description}</p>
+        <div className="flex h-full items-center sm:w-[85%] justify-center">
+          <p className="text-black text-3xl font-handjet text-center">{routine?.description}</p>
+        </div>
       </div>
 
       {/* Category and edit button container */}
@@ -51,7 +53,7 @@ const RoutinePage: React.FC = () => {
           </button>
           <button
             className=" bg-resonPurple text-2xl w-20 sm:w-32 text-black font-pixelify hover:text-pink-700 no-underline"
-            onClick={() => navigate(`/routines/edit/${id}`)}
+            onClick={() => navigate(`/routines`)}
           >
             back
           </button>

@@ -51,7 +51,11 @@ const RoutineEditPage: React.FC = () => {
 
   // Handle cancel action (navigate back to the routines list)
   const handleCancel = () => {
-    navigate('/routines'); // Navigate back to routines list
+    if (id) {
+      navigate(`/routines/${id}`); // Navigate back to the specific routine page
+    } else {
+      navigate('/routines'); // Fallback in case ID is missing
+    }
   };
 
   if (!routineData || categories.length === 0) {
@@ -66,6 +70,7 @@ const RoutineEditPage: React.FC = () => {
         categories={categories}
         initialData={routineData} // Pass initial data to the form
         onSubmit={handleFormSubmit} // Handle form submission
+        showDelete={true} // Show delete button
       />
     </div>
   );
