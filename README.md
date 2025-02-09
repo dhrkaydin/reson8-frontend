@@ -4,3 +4,14 @@ Installing dependencies, generating the DTO's based on backend API documentation
 npm install  
 npm run generate:dtos
 npm run dev
+
+
+
+to run as app:
+
+npm run electron:compile 
+
+after that change electron/dist/main.js to .cjs
+
+then you can run npm run electron:start
+or check the other commands in package.json
