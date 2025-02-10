@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
+import styles from "./Metronome.module.css";
 
 const Metronome = ({ onBpmUpdate }: { onBpmUpdate: (bpm: number) => void }) => {
   const [bpm, setBpm] = useState(120);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [subdivision, setSubdivision] = useState(4);
+  const [subdivision, setSubdivision] = useState(1);
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
   const [tickBuffer, setTickBuffer] = useState<AudioBuffer | null>(null);
   const [bpmHistory, setBpmHistory] = useState<{ bpm: number; duration: number }[]>([]); // Store BPM and its duration
@@ -95,41 +96,45 @@ const Metronome = ({ onBpmUpdate }: { onBpmUpdate: (bpm: number) => void }) => {
     <div className="p-4 flex text-center flex-col items-center gap-4 w-full">
       {/* Metronome bar */}
       <div className="flex flex-col items-center gap-4 w-full">
-        <span className="text-6xl font-micro5 text-black">Metronome</span>
+        <span className="text-6xl font-micro5 text-resonPurple">metronome</span>
         <input
           type="range"
           min="0"
           max="300"
           value={bpm}
           onChange={(e) => setBpm(Number(e.target.value))}
-          className="sm:w-1/3 w-full"
+          className={styles.slider}
         />
-        <p className="font-micro5 text-3xl">BPM: {bpm}</p>
+        <p className="font-micro5 text-3xl">{bpm} bpm</p>
       </div>
 
-      <div className="mt-4">
-        <label className="font-pixelify text-black">Subdivision</label>
-        <select
-          value={subdivision}
-          onChange={(e) => setSubdivision(Number(e.target.value))}
-          className="ml-2 p-1 bg-resonGreen text-black"
-        >
-          <option value={1}>1</option>
-          <option value={2}>1/2</option>
-          <option value={4}>1/4</option>
-        </select>
+      <div className="mt-4 flex items-center flex-col">
+        <div>
+          <span className="text-2xl font-micro5">subdivision</span>
+        </div>
+        <div className="flex space-x-2 w-full">
+          {[1, 2, 4].map((value) => (
+            <div
+              key={value}
+              onClick={() => setSubdivision(value)}
+              className={`flex px-1 w-20 py-2 justify-center items-center cursor-pointer text-xl font-micro5 transition-colors text-black ${
+                subdivision === value
+                  ? "bg-resonPurple border-4 border-black"
+                  : "bg-gray-300"
+              }`}
+            >
+              {value === 1 ? "1" : `1/${value}`}
+            </div>
+          ))}
+        </div>
       </div>
 
       <button
         onClick={handleStart}
-        className={`mt-4 p-2 w-full font-pixelify text-2xl sm:w-1/4 text-black ${isPlaying ? "bg-red-500" : "bg-resonGreen-900"}`}
+        className={`mt-4 p-2 w-2/3 font-pixelify text-2xl sm:w-1/4 text-black ${isPlaying ? "bg-red-500" : "bg-resonGreen-900"}`}
       >
-        {isPlaying ? "Stop" : "Start"}
+        {isPlaying ? "stop" : "start"}
       </button>
-
-      <p className="mt-4 text-xl">
-        Average BPM: {calculateWeightedAverageBPM()}
-      </p>
     </div>
   );
 };

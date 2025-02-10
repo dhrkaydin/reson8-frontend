@@ -5,9 +5,13 @@
   "version": "0.0.0",
   "main": "electron/main.cjs",
   "build": {
+    "productName": "RESON8",
+    "mac": {
+      "icon": "electron/assets/icon.icns"
+    },
     "files": [
       "dist/**/*",
-      "electron/dist/**/*"
+      "electron/**/*"
     ]
   },
   "type": "module",
@@ -18,8 +22,6 @@
     "preview": "vite preview",
     "generate:dtos": "node ./scripts/generateDTOs.js",
     "electron:start": "electron .",
-    "electron:compile": "tsc -p electron",
-    "electron:dev": "tsc -p electron && electron .",
     "electron:build": "electron-builder"
   },
   "dependencies": {

@@ -1,0 +1,47 @@
+/* Styles for the slider track (bar) */
+.slider {
+    @apply sm:w-2/3 w-full h-4 bg-resonPurple border-black border-4 rounded-sm appearance-none cursor-pointer accent-resonPurple;
+  }
+  
+  /* Styles for the thumb (Chrome, Safari, Edge) */
+  .slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 1rem;
+    height: 1.5rem;
+    background: #ff76ce;
+    border-radius: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    border: 4px solid black;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Custom emoji inside the thumb */
+  .slider::-webkit-slider-thumb::before {
+    content: "🎵"; /* Change to any icon */
+    font-size: 1.2rem;
+  }
+  
+  /* Styles for the thumb (Firefox) */
+  .slider::-moz-range-thumb {
+    width: 1rem;
+    height: 1.5rem;
+    background: #ff76ce;
+    border-radius: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    border: 4px solid black;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Custom emoji inside the thumb (Firefox) */
+  .slider::-moz-range-thumb::before {
+    content: "🎵";
+    font-size: 1.2rem;
+  }

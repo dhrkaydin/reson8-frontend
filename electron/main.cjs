@@ -8,8 +8,8 @@ const path_1 = __importDefault(require("path"));
 let mainWindow;
 electron_1.app.whenReady().then(() => {
     mainWindow = new electron_1.BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1000,
+        height: 800,
         webPreferences: {
             preload: path_1.default.join(__dirname, "preload.js"), // Path to preload script
             nodeIntegration: false,
