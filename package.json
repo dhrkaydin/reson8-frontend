@@ -3,7 +3,7 @@
   "description": "A practice tracker for musicians",
   "private": true,
   "version": "0.0.0",
-  "main": "electron/dist/main.cjs",
+  "main": "electron/main.cjs",
   "build": {
     "files": [
       "dist/**/*",
@@ -17,8 +17,6 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "generate:dtos": "node ./scripts/generateDTOs.js",
-    "build:electron": "vite build -c vite.config.electron.ts",
-    "dev:electron": "electron dist/main.ts",
     "electron:start": "electron .",
     "electron:compile": "tsc -p electron",
     "electron:dev": "tsc -p electron && electron .",
