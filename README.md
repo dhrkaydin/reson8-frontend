@@ -17,12 +17,17 @@ npm run dev
 ### Connecting to Backend
 
 #### Configuration
-The .env file contains the URL for the back-end API. All calls to the back-end use the useApi hook, which uses Axios (src/api/apiClient.js)
+- The .env file contains the configuration URL for the back-end API. 
+- All calls to the back-end go via the useApi hook.
+- Additional headers can be configured in the apiClient.
+- The generateDTO script relies on this connection to work.
 
 #### Generating DTOs
-This application uses a script to generate DTO's based on the OpenAPI specification of the back-end, so that it dynamically picks up on changes made to the DTO's defined by the back-end. 
+This application uses a script to generate DTO's based on the OpenAPI specification of the back-end, so that it dynamically picks up on changes made to the DTO's defined by the back-end. They should only be generated when
 
-Refer to the scripts folder to modify this script in case the location of the documentation changes.
+1. The repo is freshly cloned.
+2. Changes to the back-end DTO's have been made.
+
 ```
 npm generate:dtos
 ```

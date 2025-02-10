@@ -3,6 +3,7 @@ import useApi from '../../hooks/useApi';
 import { Dropdown } from './..';
 import './RoutineForm.module.css';
 import { PracticeRoutineDTO } from '../../generated/models/PracticeRoutineDTO';
+import { useNavigate } from 'react-router-dom';
 
 interface RoutineFormProps {
   onClose: () => void;
@@ -12,6 +13,7 @@ interface RoutineFormProps {
 }
 
 const RoutineForm: React.FC<RoutineFormProps> = ({ onClose, initialData, onSubmit, showDelete = false }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState(initialData);
   const [showTargets, setShowTargets] = useState(false);
   const { data, execute } = useApi<string[]>();
@@ -61,10 +63,12 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ onClose, initialData, onSubmi
   const handleDelete = async () => {
     if (confirm('Are you sure you want to delete this routine? This action cannot be undone.')) {
       try {
-        await fetch(`/routines/${initialData.id}`, { method: 'DELETE' });
-        onClose(); // Close form after deletion
+        await execute('DELETE', `/routines/${initialData.id}`);
+        onClose();
       } catch (error) {
         console.error('Error deleting routine:', error);
+      } finally {
+        navigate('/routines');
       }
     }
   };

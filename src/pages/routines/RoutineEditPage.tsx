@@ -67,7 +67,6 @@ const RoutineEditPage: React.FC = () => {
       <h1 className="text-3xl font-bold font-silkscreen bg-resonGreen text-center text-resonPurple">Edit Routine</h1>
       <RoutineForm
         onClose={handleCancel} // Navigate back to routines list
-        categories={categories}
         initialData={routineData} // Pass initial data to the form
         onSubmit={handleFormSubmit} // Handle form submission
         showDelete={true} // Show delete button
