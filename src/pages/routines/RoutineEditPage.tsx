@@ -63,8 +63,8 @@ const RoutineEditPage: React.FC = () => {
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold font-silkscreen bg-resonGreen text-center text-resonPurple">Edit Routine</h1>
+    <div className="flex flex-grow flex-col">
+      <span className="text-4xl sm:text-6xl p-4 font-bold font-handjet bg-resonGreen text-center text-resonPurple">Edit Routine</span>
       <RoutineForm
         onClose={handleCancel} // Navigate back to routines list
         initialData={routineData} // Pass initial data to the form

@@ -61,10 +61,9 @@ const RoutineOverview: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-resonYellow sm:px-4 pb-4">
+    <div className="flex flex-grow flex-col bg-resonYellow sm:px-4 pb-4">
       {/* Filter + Button Container */}
       <div className="sticky bg-resonYellow top-0 flex flex-col sm:flex-row sm:justify-center items-center sm:pt-4 pb-4 gap-4 sm:gap-10 sm:px-36">
-        {/* Filter Dropdown */}
         <div className="flex flex-col sm:flex-row justify-center items-center font-pixelify text-2xl">
           <label htmlFor="categoryFilter" className="mr-2 text-black">filter:</label>
           
@@ -89,7 +88,6 @@ const RoutineOverview: React.FC = () => {
           </div>
         </div>
 
-        {/* Create Routine Button */}
         <button
           onClick={() => setShowForm(!showForm)}
           className="bg-resonPurple flex justify-center items-center font-pixelify h-10 w-52 text-2xl hover:bg-resonPurple-800"
@@ -103,22 +101,24 @@ const RoutineOverview: React.FC = () => {
         <RoutineForm
           onClose={() => setShowForm(false)}
           initialData={{
+            id: null,
             title: '',
             description: '',
+            createdDate: '',
             category: '',
-            targetBPM: '',
-            targetFrequencyInterval: '',
-            targetFrequencyUnit: '',
+            targetBPM: null,
+            targetFrequencyInterval: null,
+            targetFrequencyUnit: null,
           }}
           onSubmit={handleSubmit}
         />
       )}
 
-      {/* Grid of Routines */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-4 sm:gap-y-24 mx-auto place-items-center overflow-y-auto scrollbar-hidden">
+      {/* Routine Grid */}
+      <div className="flex-1 grid grid-cols-1 sm::grid-cols-3 gap-y-4 sm:gap-24 mx-auto place-items-center overflow-y-auto scrollbar-hidden">
         {filteredRoutines.map((routine, index) => (
-          <Link to={`/routines/${routine.id.toString()}`} key={routine.id}>
-            <div className={`flex flex-col text-center justify-center items-center aspect-square w-60 shadow-sm text-black ${
+          <Link to={`/routines/${routine.id.toString()}`} key={routine.id} className="w-full">
+            <div className={`flex flex-col text-center justify-center items-center p-4 sm:aspect-square sm:w-60 shadow-sm text-black ${
                 index % 2 === 0 ? "bg-resonGreen" : "bg-resonPurple"
               }`}>
               <h2 className="flex font-semibold text-4xl text-black font-handjet">{routine.title}</h2>

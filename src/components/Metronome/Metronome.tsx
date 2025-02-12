@@ -93,14 +93,13 @@ const Metronome = ({ onBpmUpdate }: { onBpmUpdate: (bpm: number) => void }) => {
   }, [bpmHistory, onBpmUpdate]);
 
   return (
-    <div className="p-4 flex text-center flex-col items-center gap-4 w-full">
+    <div className="px-4 flex text-center flex-col items-center sm:gap-4 w-full">
       {/* Metronome bar */}
       <div className="flex flex-col items-center gap-4 w-full">
-        <span className="text-6xl font-micro5 text-resonPurple">metronome</span>
         <input
           type="range"
-          min="0"
-          max="300"
+          min="60"
+          max="200"
           value={bpm}
           onChange={(e) => setBpm(Number(e.target.value))}
           className={styles.slider}

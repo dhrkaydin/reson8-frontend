@@ -1,6 +1,6 @@
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { Layout } from './components';
-import { RoutineOverview, RoutinePage, RoutineEditPage, HomePage, SessionSelection, SessionPage } from './pages';
+import { RoutineOverview, RoutinePage, RoutineEditPage, HomePage, SessionSelection, SessionPage, StatisticsPage } from './pages';
 import './styles/App.css';
 
 function App() {
@@ -14,6 +14,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/sessions" element={<SessionSelection />} />
             <Route path="/sessions/active" element={<SessionPage />} />
+            <Route path="/stats" element={< StatisticsPage />} />
           </Route>
         </Routes>
     </Router>

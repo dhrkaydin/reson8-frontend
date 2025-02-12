@@ -1,32 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { PracticeRoutineDTO } from '../../generated/models/PracticeRoutineDTO';
-import apiClient from '../../api/apiClient';
+import useApi from '../../hooks/useApi';
 
 const RoutinePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [routine, setRoutine] = useState<PracticeRoutineDTO | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, execute, loading, error } = useApi<PracticeRoutineDTO>();
 
   useEffect(() => {
     if (!id) return;
-
+  
     const fetchRoutine = async () => {
-      try {
-        const response = await apiClient.get<PracticeRoutineDTO>(`/routines/${id}`);
-        setRoutine(response.data);
-      } catch (err) {
-        setError('Failed to load routine. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
+      await execute('GET', `/routines/${id}`);
     };
-
+  
     fetchRoutine();
-  }, [id]);
+  }, [id, location]);
+
+  useEffect(() => {
+    if (data) {
+      setRoutine(data);
+    }
+  }, [data]);
 
   if (loading) return <div className="text-center mt-10 text-gray-600">Loading...</div>;
   if (error) return <div className="text-center mt-10 text-red-500">{error}</div>;

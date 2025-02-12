@@ -4,4 +4,5 @@ export { default as RoutineOverview } from './routines/RoutineOverview';
 export { default as HomePage } from './HomePage';
 export { default as SessionSelection } from './session/SessionSelection';
 export { default as SessionPage } from './session/SessionPage';
+export { default as StatisticsPage } from './statistics/StatisticsPage';
  

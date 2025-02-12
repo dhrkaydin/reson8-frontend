@@ -4,7 +4,7 @@ import { PracticeRoutineDTO } from '../../generated/models/PracticeRoutineDTO';
 import useApi from '../../hooks/useApi';
 
 const SessionSelection: React.FC = () => {
-    const [showSelection, setShowSelection]= useState<boolean>(true); 
+    const [showSelection, setShowSelection] = useState<boolean>(true); 
     const [filteredRoutines, setFilteredRoutines] = useState<PracticeRoutineDTO[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
     const { data, loading, error, execute } = useApi<PracticeRoutineDTO[]>();
@@ -13,7 +13,6 @@ const SessionSelection: React.FC = () => {
 
 
     useEffect(() => {
-    // Fetch data using the execute method from useApi
     const fetchData = async () => {
         try {
         await execute('GET', '/routines');
@@ -28,12 +27,11 @@ const SessionSelection: React.FC = () => {
     useEffect(() => {
         if (data) {
           setRoutines(data);
-          const categoryNames = [...new Set(data.map((routine) => routine.category))]; // Ensure unique categories
+          const categoryNames = [...new Set(data.map((routine) => routine.category))];
           setCategories(['all', ...categoryNames]);
         }
       }, [data]);
     
-      // Synchronize filtered routines with routines and selectedCategory
       useEffect(() => {
         if (selectedCategory === 'all') {
           setFilteredRoutines(routines);
@@ -50,7 +48,7 @@ const SessionSelection: React.FC = () => {
 
 
     return (
-        <div className="min-h-screen bg-resonGreen flex-row sm:px-4 py-2 sm:p-6">
+        <div className="flex flex-grow flex-col bg-resonGreen sm:px-4 pb-4">
             {/* Title */}
             <div className="w-full font-silkscreen text-3xl sm:text-6xl text-center text-resonPurple">
                 <span>
@@ -58,41 +56,39 @@ const SessionSelection: React.FC = () => {
                 </span>
             </div>
 
-            {/* Filter Container */}
+            {/* Filter */}
             <div className="sticky bg-resonGreen top-0 flex flex-col sm:flex-row sm:justify-center items-center sm:pt-4 pb-4 gap-4 sm:gap-10 sm:px-36">
-                {/* Filter Dropdown */}
                 <div className="flex flex-col sm:flex-row justify-center items-center font-pixelify text-2xl">
-                <label htmlFor="categoryFilter" className="mr-2 text-black">filter:</label>
-                
-                <div className="relative">
-                    <select
-                    id="categoryFilter"
-                    value={selectedCategory}
-                    onChange={(e) => handleFilterChange(e.target.value)}
-                    className="bg-resonYellow h-10 w-52 text-black text-2xl text-center font-pixelify px-4 py-0 border appearance-none cursor-pointer focus:outline-none"
-                    >
-                    {categories.map((category, index) => (
-                        <option key={index} value={category} className="text-black bg-resonYellow">
-                        {category}
-                        </option>
-                    ))}
-                    </select>
+                  <label htmlFor="categoryFilter" className="mr-2 text-black">filter:</label>
+                  
+                  <div className="relative">
+                      <select
+                      id="categoryFilter"
+                      value={selectedCategory}
+                      onChange={(e) => handleFilterChange(e.target.value)}
+                      className="bg-resonYellow h-10 w-52 text-black text-2xl text-center font-pixelify px-4 py-0 border appearance-none cursor-pointer focus:outline-none"
+                      >
+                      {categories.map((category, index) => (
+                          <option key={index} value={category} className="text-black bg-resonYellow">
+                          {category}
+                          </option>
+                      ))}
+                      </select>
 
-                    {/* Custom dropdown arrow */}
-                    <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-                    ⌄
-                    </div>
-                </div>
+                      {/* Custom dropdown arrow */}
+                      <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                      ⌄
+                      </div>
+                  </div>
                 </div>
             </div>
             
-            {/* Grid of Routines */}
-           
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-4 sm:gap-y-24 mx-auto place-items-center overflow-y-auto scrollbar-hidden">
+            {/* Routine Grid */}
+            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-4 sm:gap-24 mx-auto overflow-y-auto scrollbar-hidden">
             {filteredRoutines.map((routine, index) => (
-            <Link to="/sessions/active" state={{ routineId: routine.id }} key={routine.id}>
+            <Link to="/sessions/active" state={{ routineId: routine.id }} key={routine.id} className="w-full">
 
-                <div className={`flex flex-col text-center justify-center items-center aspect-square w-60 shadow-sm text-black ${
+                <div className={`flex flex-col text-center justify-center items-center p-4 sm:aspect-square w-full sm:w-60 shadow-sm text-black ${
                     index % 2 === 0 ? "bg-resonYellow" : "bg-resonPurple"
                 }`}>
                 <h2 className="flex font-semibold text-4xl text-black font-handjet">{routine.title}</h2>
@@ -101,8 +97,6 @@ const SessionSelection: React.FC = () => {
             </Link>
             ))}
             </div>
-            
-
         </div>
     );
 };
