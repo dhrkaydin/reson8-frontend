@@ -31,7 +31,7 @@ const RoutinePage: React.FC = () => {
   if (error) return <div className="text-center mt-10 text-red-500">{error}</div>;
 
   return (
-    <div className="w-full min-h-screen h-full bg-resonYellow flex-col items-center justify-center gap-10 p-8">
+    <div className="flex flex-grow flex-col bg-resonYellow items-center justify-center gap-10 p-8">
       {/* Title and description container */}
       <div className= "flex flex-col flex-grow-[2] w-full h-2/3 items-center gap-4">
         <span className="text-3xl sm:text-6xl font-silkscreen text-resonPurple text-center">{routine?.title}</span>
