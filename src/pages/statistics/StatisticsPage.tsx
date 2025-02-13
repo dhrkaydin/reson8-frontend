@@ -135,36 +135,25 @@ const StatisticsPage: React.FC = () => {
                 </div>
             </div>
 
-
             {/* Chart */}
             <div className="mb-6 px-5 flex-grow font-silkscreen flex justify-center items-center">
                 <ResponsiveContainer width="95%" height={400}>
                     <LineChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#d562ac" />
-                    <XAxis
-                        dataKey="date"
-                        tick={{ fill: "#000000", fontSize: 14 }}
-                        axisLine={{ stroke: "#000000", strokeWidth: 2 }}
-                    />
-                    <YAxis
-                        tick={{ fill: "#000000", fontSize: 14 }}
-                        axisLine={{ stroke: "#000000", strokeWidth: 2 }}
-                    />
-                    <Legend stroke="#000000" />
-
+                        <CartesianGrid strokeDasharray="3 3" stroke="#d562ac" />
+                        <XAxis
+                            dataKey="date"
+                            tick={{ fill: "#000000", fontSize: 14 }}
+                            axisLine={{ stroke: "#000000", strokeWidth: 2 }}
+                        />
+                        <YAxis
+                            tick={{ fill: "#000000", fontSize: 14 }}
+                            axisLine={{ stroke: "#000000", strokeWidth: 2 }}
+                        />
+                        <Legend />
                         <Line type="monotone" dataKey={metric} stroke={"#94ffd8"} strokeWidth="4" />
                     </LineChart>
                 </ResponsiveContainer>
             </div>
-
-            {/* Session List, might need for debugging */}
-            <ul className='hidden'>
-                {sessions?.map((session) => (
-                    <li key={session.id}>
-                        {session.sessionDate} - BPM: {session.bpm}, Duration: {(session.duration / 60).toFixed(2)} minutes
-                    </li>
-                ))}
-            </ul>
         </div>
     );
 };
