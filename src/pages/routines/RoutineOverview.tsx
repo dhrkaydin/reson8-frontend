@@ -115,7 +115,7 @@ const RoutineOverview: React.FC = () => {
       )}
 
       {/* Routine Grid */}
-      <div className="flex-1 grid grid-cols-1 sm::grid-cols-3 gap-y-4 sm:gap-24 mx-auto place-items-center overflow-y-auto scrollbar-hidden">
+      <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-4 sm:gap-24 mx-auto place-items-center overflow-y-auto scrollbar-hidden">
         {filteredRoutines.map((routine, index) => (
           <Link to={`/routines/${routine.id.toString()}`} key={routine.id} className="w-full">
             <div className={`flex flex-col text-center justify-center items-center p-4 sm:aspect-square sm:w-60 shadow-sm text-black ${
